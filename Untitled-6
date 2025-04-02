@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Gastos 💰</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 500px; margin-top: 50px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .gasto-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #ffffff; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .btn-delete { background: red; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; text-align: center; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container text-center animate__animated animate__fadeIn">
+        <h1 class="mb-4">📊 Calculadora de Gastos</h1>
+        <div class="mb-3">
+            <input type="text" id="concepto" class="form-control" placeholder="Concepto (Ej: Comida, Transporte)">
+        </div>
+        <div class="mb-3">
+            <input type="number" id="monto" class="form-control" placeholder="Monto en $">
+        </div>
+        <button class="btn btn-primary w-100 animate__animated" onclick="agregarGasto()">➕ Agregar Gasto</button>
+        
+        <h3 class="mt-4">📝 Lista de Gastos</h3>
+        <div id="lista-gastos"></div>
+        <h4 class="mt-3">Total Gastado: <span id="total">$0</span></h4>
+    </div>
+    
+    <script>
+        let totalGastos = 0;
+        function agregarGasto() {
+            const concepto = document.getElementById("concepto").value.trim();
+            const monto = parseFloat(document.getElementById("monto").value);
+            if (!concepto || isNaN(monto) || monto <= 0) {
+                alert("Por favor, ingrese un concepto válido y un monto mayor a 0");
+                return;
+            }
+            
+            totalGastos += monto;
+            document.getElementById("total").textContent = `$${totalGastos.toFixed(2)}`;
+            
+            const gastoItem = document.createElement("div");
+            gastoItem.classList.add("gasto-item", "animate__animated", "animate__fadeInUp");
+            gastoItem.innerHTML = `<span>${concepto}</span><span>$${monto.toFixed(2)}</span> <button class='btn-delete' onclick='eliminarGasto(this, ${monto})'>✖</button>`;
+            
+            document.getElementById("lista-gastos").prepend(gastoItem);
+            document.getElementById("concepto").value = "";
+            document.getElementById("monto").value = "";
+        }
+
+        function eliminarGasto(element, monto) {
+            element.parentElement.classList.add("animate__fadeOut");
+            setTimeout(() => {
+                element.parentElement.remove();
+                totalGastos -= monto;
+                document.getElementById("total").textContent = `$${totalGastos.toFixed(2)}`;
+            }, 500);
+        }
+    </script>
+</body>
+</html>
